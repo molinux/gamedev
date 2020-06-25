@@ -1,17 +1,24 @@
 class Personagem extends Animacao {
-  constructor(matriz, imagem, x, largura, altura, larguraSprite, alturaSprite) {
-    super(matriz, imagem, x, largura, altura, larguraSprite, alturaSprite)
+  constructor(matriz, imagem, x, variacaoY, largura, altura, larguraSprite, alturaSprite) {
+    super(matriz, imagem, x, variacaoY, largura, altura, larguraSprite, alturaSprite)
 
-    this.yInicial = height - this.altura;
+    this.variacaoY = variacaoY;
+    this.yInicial = height - this.altura - this.variacaoY;
     this.y = this.yInicial;
 
     this.velocidadeDoPulo = 0;
     this.gravidade = 3;
+    this.alturaDoPulo = -32;
+    this.pulos = 0;
   }
 
   pula() {
-    console.log('Jump around !')
-    this.velocidadeDoPulo = - 30;
+    if (this.pulos < 2) {
+      console.log('Jump around !')
+      this.velocidadeDoPulo = this.alturaDoPulo;
+      this.pulos++
+    } 
+
   }
 
   aplicaGravidade() {
@@ -20,10 +27,11 @@ class Personagem extends Animacao {
 
     if (this.y > this.yInicial) {
       this.y = this.yInicial;
+      this.pulos = 0
     }
   }
 
-  estaColidindo() {
+  estaColidindo(inimigo) {
     // noFill()
     // rect(this.x, this.y, this.altura, this.largura);
     // rect(inimigo.x, inimigo.y, inimigo.largura, inimigo.altura);
@@ -35,8 +43,8 @@ class Personagem extends Animacao {
       this.altura * precisao, 
       inimigo.x, 
       inimigo.y, 
-      inimigo.largura, 
-      inimigo.altura
+      inimigo.largura * precisao, 
+      inimigo.altura * precisao
     )
 
     return colisao;
